@@ -22,11 +22,12 @@ public class LogInViewModel extends AndroidViewModel {
     public LogInViewModel(Application application) {
         super(application);
 
-        mUserResult = new MediatorLiveData<>();
         mRepository = ((BasicApp) application).getApiRepository();
     }
 
     public LiveData<UserResult> getUserResult(LogIn logIn) {
+        mUserResult = null;
+        mUserResult = new MediatorLiveData<>();
         mUserResult.addSource(mRepository.provideLoginRepository().getUserResult(logIn), user -> mUserResult.setValue(user));
 
         return mUserResult;
