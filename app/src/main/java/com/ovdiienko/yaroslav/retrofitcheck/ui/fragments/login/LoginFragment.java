@@ -1,6 +1,5 @@
 package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.login;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.ovdiienko.yaroslav.retrofitcheck.BasicApp;
 import com.ovdiienko.yaroslav.retrofitcheck.R;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.LogIn;
+import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.UserResult;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.db.models.User;
 import com.ovdiienko.yaroslav.retrofitcheck.ui.activities.main.MainActivity;
 import com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.BaseFragment;
@@ -82,7 +82,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_btn_sign_in:
-                checkIfNameAndPasswordValid();
+                if (isInternetConnectionExist()) {
+                    checkIfNameAndPasswordValid();
+                }
                 break;
             case R.id.login_btn_sign_up:
                 showToast(getString(R.string.app_not_implemented));
@@ -116,20 +118,21 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             mUserPassword.setError(getString(R.string.login_password_not_valid));
         } else {
             if (getActivity() != null) {
-
                 LogIn logIn = new LogIn(userName, userPassword);
-                mViewModel.getUser(logIn).observe(this, observeUser());
+                mViewModel.getUserResult(logIn).observe(this, this::observeUser);
             }
         }
     }
 
-    private Observer<User> observeUser() {
-        return user -> {
-            if (user == null) {
-                Log.e(TAG, "User object is null!");
-                return;
-            }
+    private void observeUser(UserResult result) {
+        if (result == null) {
+            Log.e(TAG, "UserResult object is null!");
+            return;
+        }
 
+        User user = result.getUser();
+        boolean status = result.getStatus();
+        if (user != null && status) {
             ((BasicApp) getActivity().getApplication()).getDataRepository().provideUserRepository().insertUser(user);
 
             PreferencesUtils.put(getActivity(), PreferencesKeys.IS_LOGGED_IN, true);
@@ -137,8 +140,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_TOKEN, user.getToken());
 
             finishAndStartApp();
-
-        };
+        } else {
+            showToast(result.getDescription());
+        }
     }
 
     private void finishAndStartApp() {

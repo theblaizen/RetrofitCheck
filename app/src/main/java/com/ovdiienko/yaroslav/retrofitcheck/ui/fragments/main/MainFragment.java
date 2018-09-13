@@ -87,7 +87,9 @@ public class MainFragment extends BaseFragment implements PreviewListener {
 
     @Override
     protected void setupItems() {
-        receiveData();
+        if (isInternetConnectionExist()) {
+            receiveData();
+        }
 
         mRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(R.dimen.toolbar_height) + 20);
         mRefreshLayout.setOnRefreshListener(this::refreshListener);
@@ -98,10 +100,6 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     }
 
     private void receiveData() {
-        if (!Utils.isOnline(getActivity())) {
-            showToast(getString(R.string.app_check_internet_connection));
-        }
-
         mViewModel.getData(mUserToken).observe(this, this::observeImages);
     }
 
@@ -121,9 +119,11 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     }
 
     private void refreshListener() {
-        showToast(getString(R.string.app_updating_content));
+        if (isInternetConnectionExist()) {
+            showToast(getString(R.string.app_updating_content));
+            receiveData();
+        }
 
-        receiveData();
         mRefreshLayout.setRefreshing(false);
     }
 

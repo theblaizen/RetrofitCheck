@@ -8,6 +8,7 @@ import com.ovdiienko.yaroslav.retrofitcheck.dto.api.SourceApi;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.interfaces.ApiLogin;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.LogIn;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.LoginResult;
+import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.UserResult;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.db.models.User;
 import com.ovdiienko.yaroslav.retrofitcheck.utils.AppExecutors;
 
@@ -33,30 +34,40 @@ public class ApiLoginRepository {
         mApiLogin = SourceApi.getLoginApi();
     }
 
-    public LiveData<User> getUser(LogIn logIn) {
-        final MutableLiveData<User> apiResponse = new MutableLiveData<>();
+    public LiveData<UserResult> getUserResult(LogIn logIn) {
+        final MutableLiveData<UserResult> apiResponse = new MutableLiveData<>();
         Call<LoginResult> call = mApiLogin.sendLoginDetails(logIn);
 
         mExecutors.networkIO().execute(() -> call.enqueue(new Callback<LoginResult>() {
             @Override
             public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
                 if (response.isSuccessful()) {
-                    User user = new User();
-                    user.setLogin(logIn.getLogin());
-                    user.setPassword(logIn.getPassword());
-                    user.setToken(response.body().getToken());
+                    LoginResult result = response.body();
+                    UserResult userResult;
 
-                    apiResponse.postValue(user);
+                    if (result.isStatusSuccess()) {
+                        User user = new User();
+                        user.setLogin(logIn.getLogin());
+                        user.setPassword(logIn.getPassword());
+                        user.setToken(response.body().getToken());
 
-                    if (DEBUG) {
-                        Log.d(TAG, user.toString());
+                        userResult = new UserResult(user, null, result.isStatusSuccess());
+                        apiResponse.postValue(userResult);
+
+                        if (DEBUG) {
+                            Log.d(TAG, user.toString());
+                        }
+                    } else {
+                        userResult = new UserResult(null, result.getDescription(), result.isStatusSuccess());
+                        apiResponse.postValue(userResult);
                     }
+
+
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResult> call, Throwable t) {
-
             }
         }));
 

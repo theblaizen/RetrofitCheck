@@ -12,8 +12,10 @@ public class LoginResult {
     private boolean status;
     @Expose
     private String token;
+    @Expose
+    private String description;
 
-    public boolean isStatus() {
+    public boolean isStatusSuccess() {
         return status;
     }
 
@@ -27,5 +29,13 @@ public class LoginResult {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
