@@ -22,7 +22,7 @@ import retrofit2.Response;
  */
 
 public class ApiLoginRepository {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = ApiLoginRepository.class.getSimpleName();
 
     private AppExecutors mExecutors;

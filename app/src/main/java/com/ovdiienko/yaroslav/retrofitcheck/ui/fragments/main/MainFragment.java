@@ -38,7 +38,7 @@ import java.util.List;
  */
 
 public class MainFragment extends BaseFragment implements PreviewListener {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = MainFragment.class.getSimpleName();
 
     private SwipeRefreshLayout mRefreshLayout;

@@ -28,7 +28,7 @@ import com.ovdiienko.yaroslav.retrofitcheck.view_models.login.LogInViewModel;
  */
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = LoginFragment.class.getSimpleName();
     private EditText mUserName;
     private EditText mUserPassword;
