@@ -3,12 +3,8 @@ package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.login;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +14,7 @@ import com.ovdiienko.yaroslav.retrofitcheck.R;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.LogIn;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.api.requests.UserResult;
 import com.ovdiienko.yaroslav.retrofitcheck.dto.db.models.User;
+import com.ovdiienko.yaroslav.retrofitcheck.ui.activities.BaseActivity;
 import com.ovdiienko.yaroslav.retrofitcheck.ui.activities.main.MainActivity;
 import com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.BaseFragment;
 import com.ovdiienko.yaroslav.retrofitcheck.utils.PreferencesKeys;
@@ -33,24 +30,23 @@ import com.ovdiienko.yaroslav.retrofitcheck.view_models.login.LogInViewModel;
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
     private static final boolean DEBUG = true;
     private static final String TAG = LoginFragment.class.getSimpleName();
+    private EditText mUserName;
+    private EditText mUserPassword;
+    private Button mSignIn;
+    private Button mSignUp;
+    private TextView mTestUser;
+    private LogInViewModel mViewModel;
 
-    public static LoginFragment newInstance(int container) {
+    public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
         Bundle bundle = new Bundle();
+        int container = R.layout.fragment_login;
 
         bundle.putInt(CONTAINER_LAYOUT, container);
         fragment.setArguments(bundle);
 
         return fragment;
     }
-
-    private EditText mUserName;
-    private EditText mUserPassword;
-    private Button mSignIn;
-    private Button mSignUp;
-    private TextView mTestUser;
-
-    private LogInViewModel mViewModel;
 
     @Override
     protected View initItems(View view) {
@@ -134,6 +130,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             mUserPassword.setError(getString(R.string.login_password_not_valid));
         } else {
             if (getActivity() != null) {
+                ((BaseActivity)getActivity()).toggleProgressLayout();
+
                 LogIn logIn = new LogIn(userName, userPassword);
                 mViewModel.getUser(logIn);
             }
@@ -146,6 +144,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         PreferencesUtils.put(getActivity(), PreferencesKeys.IS_LOGGED_IN, true);
         PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_LOGIN, user.getLogin());
         PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_TOKEN, user.getToken());
+
+        ((BaseActivity)getActivity()).toggleProgressLayout();
     }
 
     private void finishAndStartApp() {

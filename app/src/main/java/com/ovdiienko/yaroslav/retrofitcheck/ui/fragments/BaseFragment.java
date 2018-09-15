@@ -1,6 +1,5 @@
 package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -51,7 +50,6 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract View initItems(View view);
 
-    @SuppressLint("ResourceType")
     private View getLayout(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         return inflater.inflate(container_layout, container, false);
     }

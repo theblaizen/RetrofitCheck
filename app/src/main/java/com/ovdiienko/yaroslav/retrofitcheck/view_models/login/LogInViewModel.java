@@ -30,7 +30,7 @@ public class LogInViewModel extends AndroidViewModel {
         mUserResult.addSource(mRepository.provideLoginRepository().getUserResult(logIn), user -> mUserResult.setValue(user));
     }
 
-    public LiveData<UserResult> getUserLiveData(){
+    public LiveData<UserResult> getUserLiveData() {
         return mUserResult;
     }
 

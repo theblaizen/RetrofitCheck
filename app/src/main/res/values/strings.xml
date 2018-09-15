@@ -7,7 +7,7 @@
     <string name="app_not_implemented">Not implemented!</string>
 
     <!--LOGIN-->
-    <string name="app_login">Log In</string>
+    <string name="app_login_title">Log In</string>
     <string name="app_welcome">Welcome to Test App</string>
 
     <string name="login_name_hint">test_user</string>

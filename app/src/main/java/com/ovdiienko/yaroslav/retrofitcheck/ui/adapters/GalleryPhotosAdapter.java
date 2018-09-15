@@ -22,9 +22,8 @@ import java.util.List;
 
 public class GalleryPhotosAdapter extends RecyclerView.Adapter<GalleryPhotosAdapter.ViewHolder> {
     private final Context mContext;
-    private List<Photo> mDataset;
-
     private final PreviewListener mListener;
+    private List<Photo> mDataset;
 
     public GalleryPhotosAdapter(List<Photo> data, Context context, PreviewListener listener) {
         mDataset = data;

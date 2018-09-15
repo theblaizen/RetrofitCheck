@@ -3,19 +3,15 @@ package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.main;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.ovdiienko.yaroslav.retrofitcheck.BasicApp;
@@ -45,25 +41,25 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     private static final boolean DEBUG = true;
     private static final String TAG = MainFragment.class.getSimpleName();
 
-    public static MainFragment newInstance(int container) {
+    private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgressBar;
+    private RecyclerView mPhotosList;
+    private GalleryPhotosAdapter mAdapter;
+    private ImageOverlayView mOverlayView;
+    private List<Photo> mDataset = new ArrayList<>();
+    private String mUserToken;
+    private MainViewModel mViewModel;
+
+    public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
+        int container = R.layout.fragment_main;
 
         bundle.putInt(CONTAINER_LAYOUT, container);
         fragment.setArguments(bundle);
 
         return fragment;
     }
-
-    private SwipeRefreshLayout mRefreshLayout;
-    private ProgressBar mProgressBar;
-    private RecyclerView mPhotosList;
-    private GalleryPhotosAdapter mAdapter;
-    private ImageOverlayView mOverlayView;
-
-    private List<Photo> mDataset = new ArrayList<>();
-    private String mUserToken;
-    private MainViewModel mViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
