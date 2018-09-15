@@ -76,6 +76,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
         mSignIn.setOnClickListener(this);
         mSignUp.setOnClickListener(this);
+
+        mViewModel.getUserResult().observe(this, this::observeUser);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         } else {
             if (getActivity() != null) {
                 LogIn logIn = new LogIn(userName, userPassword);
-                mViewModel.getUserResult(logIn).observe(this, this::observeUser);
+                mViewModel.getUserResult(logIn);
             }
         }
     }

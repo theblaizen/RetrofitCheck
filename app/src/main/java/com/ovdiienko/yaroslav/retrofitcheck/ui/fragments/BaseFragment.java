@@ -37,13 +37,17 @@ public abstract class BaseFragment extends Fragment {
         if (TextUtils.isEmpty(text))
             return;
 
+        cancelToast();
+
+        mToast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
+
+    private void cancelToast() {
         if (mToast != null) {
             mToast.cancel();
             mToast = null;
         }
-
-        mToast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
-        mToast.show();
     }
 
     protected boolean isInternetConnectionExist() {
@@ -51,8 +55,14 @@ public abstract class BaseFragment extends Fragment {
         if (!isConnected) {
             showToast(getString(R.string.app_check_internet_connection));
         }
-        
+
         return isConnected;
     }
 
+    @Override
+    public void onStop() {
+        cancelToast();
+        super.onStop();
+
+    }
 }
