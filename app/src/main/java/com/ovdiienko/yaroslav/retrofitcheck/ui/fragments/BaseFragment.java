@@ -1,11 +1,15 @@
 package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ovdiienko.yaroslav.retrofitcheck.R;
@@ -17,7 +21,40 @@ import com.ovdiienko.yaroslav.retrofitcheck.utils.Utils;
  */
 
 public abstract class BaseFragment extends Fragment {
+    protected static final String CONTAINER_LAYOUT = "Fragment.v4.CONTAINER_LAYOUT";
+    protected int container_layout;
+
     private Toast mToast;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        getArgumentsFromInstance();
+    }
+
+    private void getArgumentsFromInstance() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            container_layout = bundle.getInt(CONTAINER_LAYOUT, 0);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return initItems(getLayout(inflater, container));
+    }
+
+    /**
+     * Runs on onCreateView(...)
+     */
+    protected abstract View initItems(View view);
+
+    @SuppressLint("ResourceType")
+    private View getLayout(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        return inflater.inflate(container_layout, container, false);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -25,8 +62,6 @@ public abstract class BaseFragment extends Fragment {
 
         setupItems();
     }
-
-    protected abstract void initItems(View view);
 
     /**
      * Runs on onViewCreated(...)

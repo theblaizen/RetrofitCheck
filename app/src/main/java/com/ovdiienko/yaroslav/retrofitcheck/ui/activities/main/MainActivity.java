@@ -1,7 +1,6 @@
 package com.ovdiienko.yaroslav.retrofitcheck.ui.activities.main;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +12,7 @@ import com.ovdiienko.yaroslav.retrofitcheck.utils.FragmentUtils;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private final @IdRes
-    int container = R.id.main_fragment_container;
+    private final int container = R.id.main_fragment_container;
 
     private Fragment mMainFragment;
     private Toolbar mToolbar;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addFragmentToActivity() {
-        mMainFragment = MainFragment.newInstance();
+        mMainFragment = MainFragment.newInstance(R.layout.fragment_main);
         FragmentUtils.addFragment(getSupportFragmentManager(), container, mMainFragment, mMainFragment.getClass().getSimpleName());
     }
 

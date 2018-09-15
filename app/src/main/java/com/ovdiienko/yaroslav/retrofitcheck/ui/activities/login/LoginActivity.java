@@ -1,7 +1,6 @@
 package com.ovdiienko.yaroslav.retrofitcheck.ui.activities.login;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +10,7 @@ import com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.login.LoginFragment;
 import com.ovdiienko.yaroslav.retrofitcheck.utils.FragmentUtils;
 
 public class LoginActivity extends AppCompatActivity {
-    private final @IdRes
-    int container = R.id.login_fragment_container;
+    private final int container = R.id.login_fragment_container;
 
     private Fragment mLoginFragment;
     private Toolbar mToolbar;
@@ -34,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addFragmentToActivity() {
-        mLoginFragment = LoginFragment.newInstance();
+        mLoginFragment = LoginFragment.newInstance(R.layout.fragment_login);
         FragmentUtils.addFragment(getSupportFragmentManager(), container, mLoginFragment, mLoginFragment.getClass().getSimpleName());
     }
 

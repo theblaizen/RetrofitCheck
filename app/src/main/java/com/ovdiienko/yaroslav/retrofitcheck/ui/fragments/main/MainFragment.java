@@ -3,6 +3,7 @@ package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.main;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +45,16 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     private static final boolean DEBUG = true;
     private static final String TAG = MainFragment.class.getSimpleName();
 
+    public static MainFragment newInstance(int container) {
+        MainFragment fragment = new MainFragment();
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(CONTAINER_LAYOUT, container);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     private SwipeRefreshLayout mRefreshLayout;
     private ProgressBar mProgressBar;
     private RecyclerView mPhotosList;
@@ -54,16 +65,12 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     private String mUserToken;
     private MainViewModel mViewModel;
 
-    public static MainFragment newInstance() {
-        MainFragment fragment = new MainFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        // Probably is better to create separate class for Token and w/r it from Data Base.
         mUserToken = (String) PreferencesUtils.get(getActivity(), PreferencesKeys.OWN_USER_TOKEN, "");
     }
 
@@ -77,17 +84,20 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     }
 
     @Override
-    protected void initItems(View view) {
+    protected View initItems(View view) {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         mRefreshLayout = view.findViewById(R.id.main_fragment_refresh);
         mProgressBar = view.findViewById(R.id.main_fragment_pb);
         mPhotosList = view.findViewById(R.id.main_fragment_rv_photos);
+
+        return view;
     }
 
     @Override
     protected void setupItems() {
         if (isInternetConnectionExist()) {
+            mViewModel.getPhotosLiveData().observe(this, this::observeImages);
             receiveData();
         }
 
@@ -100,7 +110,7 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     }
 
     private void receiveData() {
-        mViewModel.getData(mUserToken).observe(this, this::observeImages);
+        mViewModel.getData(mUserToken);
     }
 
     private void observeImages(List<Photo> photos) {
@@ -137,15 +147,16 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_sign_out:
-                Utils.signOut(getActivity());
-                backToLogInScreen();
-
                 if (DEBUG) {
                     List<User> users = ((BasicApp) getActivity().getApplication()).getDataRepository().provideUserRepository().loadUsers().getValue();
                     if (users != null) {
                         Log.d(TAG, users.toString());
                     }
                 }
+
+                Utils.signOut(getActivity());
+                backToLogInScreen();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

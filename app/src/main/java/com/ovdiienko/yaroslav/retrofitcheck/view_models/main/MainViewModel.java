@@ -27,9 +27,11 @@ public class MainViewModel extends AndroidViewModel {
         mRepository = ((BasicApp) application).getApiRepository();
     }
 
-    public LiveData<List<Photo>> getData(String userToken) {
+    public void getData(String userToken) {
         mData.addSource(mRepository.provideMainRepository().getContent(userToken), data -> mData.setValue(data));
+    }
 
+    public LiveData<List<Photo>> getPhotosLiveData() {
         return mData;
     }
 }

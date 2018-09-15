@@ -1,6 +1,5 @@
 package com.ovdiienko.yaroslav.retrofitcheck.utils;
 
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,13 +15,13 @@ import java.util.List;
 
 public class FragmentUtils {
 
-    public static void replaceFragment(FragmentManager manager, @IdRes int container, Fragment fragment, @Nullable String tag) {
+    public static void replaceFragment(FragmentManager manager, int container, Fragment fragment, @Nullable String tag) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(container, fragment, tag);
         transaction.commit();
     }
 
-    public static void addFragment(FragmentManager manager, @IdRes int container, Fragment fragment, @Nullable String tag) {
+    public static void addFragment(FragmentManager manager, int container, Fragment fragment, @Nullable String tag) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(container, fragment, tag);
         transaction.commit();

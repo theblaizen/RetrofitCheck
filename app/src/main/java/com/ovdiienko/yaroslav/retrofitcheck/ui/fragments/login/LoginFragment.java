@@ -34,6 +34,16 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private static final boolean DEBUG = true;
     private static final String TAG = LoginFragment.class.getSimpleName();
 
+    public static LoginFragment newInstance(int container) {
+        LoginFragment fragment = new LoginFragment();
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(CONTAINER_LAYOUT, container);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     private EditText mUserName;
     private EditText mUserPassword;
     private Button mSignIn;
@@ -41,11 +51,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private TextView mTestUser;
 
     private LogInViewModel mViewModel;
-
-    public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
-    }
 
     @Nullable
     @Override
@@ -57,7 +62,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     @Override
-    protected void initItems(View view) {
+    protected View initItems(View view) {
         mViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
 
         mTestUser = view.findViewById(R.id.login_dev_user);
@@ -65,6 +70,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         mUserPassword = view.findViewById(R.id.login_password);
         mSignIn = view.findViewById(R.id.login_btn_sign_in);
         mSignUp = view.findViewById(R.id.login_btn_sign_up);
+
+        return view;
     }
 
     @Override
@@ -77,7 +84,23 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         mSignIn.setOnClickListener(this);
         mSignUp.setOnClickListener(this);
 
-        mViewModel.getUserResult().observe(this, this::observeUser);
+        mViewModel.getUserLiveData().observe(this, this::observeUser);
+    }
+
+    private void observeUser(UserResult result) {
+        if (result == null) {
+            Log.e(TAG, "UserResult object is null!");
+            return;
+        }
+
+        User user = result.getUser();
+        boolean status = result.getStatus();
+        if (user != null && status) {
+            saveUserData(user);
+            finishAndStartApp();
+        } else {
+            showToast(result.getDescription());
+        }
     }
 
     @Override
@@ -85,7 +108,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.login_btn_sign_in:
                 if (isInternetConnectionExist()) {
-                    checkIfNameAndPasswordValid();
+                    isInputValid();
                 }
                 break;
             case R.id.login_btn_sign_up:
@@ -98,7 +121,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
-    private void checkIfNameAndPasswordValid() {
+    private void isInputValid() {
         mUserPassword.setError(null);
         mUserName.setError(null);
 
@@ -121,30 +144,17 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         } else {
             if (getActivity() != null) {
                 LogIn logIn = new LogIn(userName, userPassword);
-                mViewModel.getUserResult(logIn);
+                mViewModel.getUser(logIn);
             }
         }
     }
 
-    private void observeUser(UserResult result) {
-        if (result == null) {
-            Log.e(TAG, "UserResult object is null!");
-            return;
-        }
+    private void saveUserData(User user) {
+        ((BasicApp) getActivity().getApplication()).getDataRepository().provideUserRepository().insertUser(user);
 
-        User user = result.getUser();
-        boolean status = result.getStatus();
-        if (user != null && status) {
-            ((BasicApp) getActivity().getApplication()).getDataRepository().provideUserRepository().insertUser(user);
-
-            PreferencesUtils.put(getActivity(), PreferencesKeys.IS_LOGGED_IN, true);
-            PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_LOGIN, user.getLogin());
-            PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_TOKEN, user.getToken());
-
-            finishAndStartApp();
-        } else {
-            showToast(result.getDescription());
-        }
+        PreferencesUtils.put(getActivity(), PreferencesKeys.IS_LOGGED_IN, true);
+        PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_LOGIN, user.getLogin());
+        PreferencesUtils.put(getActivity(), PreferencesKeys.OWN_USER_TOKEN, user.getToken());
     }
 
     private void finishAndStartApp() {
