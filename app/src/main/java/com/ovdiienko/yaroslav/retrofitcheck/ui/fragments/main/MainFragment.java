@@ -74,15 +74,6 @@ public class MainFragment extends BaseFragment implements PreviewListener {
         mUserToken = (String) PreferencesUtils.get(getActivity(), PreferencesKeys.OWN_USER_TOKEN, "");
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        initItems(view);
-
-        return view;
-    }
-
     @Override
     protected View initItems(View view) {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);

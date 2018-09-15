@@ -52,15 +52,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
     private LogInViewModel mViewModel;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-        initItems(view);
-
-        return view;
-    }
-
     @Override
     protected View initItems(View view) {
         mViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
