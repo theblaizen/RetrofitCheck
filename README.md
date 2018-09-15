@@ -1,14 +1,22 @@
 # Retrofit Check
 Test app for interviewers
 
-Launch screen
-![Launch screen image](https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-56.jpg)
 
-Login screen
-![Login screen image](https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-12-45.jpg)
+<p align="center"> </br>Launch screen</br>
+  <img width="300" height="520" src="https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-56.jpg">
+</p>
 
-Photos list screen
-![Photos list screen image](https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-46.jpg)
 
-Photos preveiw screen
-![Photos preveiw screen image](https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-33.jpg)
+<p align="center"> </br>Login screen</br>
+  <img width="300" height="520" src="https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-12-45.jpg">
+</p>
+
+
+<p align="center"> </br>Photos list screen</br>
+  <img width="300" height="520" src="https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-46.jpg">
+</p>
+
+
+<p align="center"> </br>Photos preveiw screen</br>
+  <img width="300" height="520" src="https://github.com/theblaizen/RetrofitCheck/blob/master/images/photo_2018-09-15_17-16-33.jpg">
+</p>
