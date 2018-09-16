@@ -3,6 +3,7 @@ package com.ovdiienko.yaroslav.retrofitcheck.ui.fragments.login;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,9 +50,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     @Override
-    protected View initItems(View view) {
-        mViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        mViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
+    }
+
+    @Override
+    protected View initItems(View view) {
         mTestUser = view.findViewById(R.id.login_dev_user);
         mUserName = view.findViewById(R.id.login_name);
         mUserPassword = view.findViewById(R.id.login_password);

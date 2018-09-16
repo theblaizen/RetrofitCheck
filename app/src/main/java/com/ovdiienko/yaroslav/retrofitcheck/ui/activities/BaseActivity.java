@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void registerFragment(Fragment fragment) {
         mFragment = fragment;
         String tag = fragment.getClass().getSimpleName();
-        FragmentUtils.addFragment(getSupportFragmentManager(), mFragmentContainer, fragment, tag);
+        FragmentUtils.replaceFragment(getSupportFragmentManager(), mFragmentContainer, fragment, tag);
     }
 
     public Fragment getFragment() {

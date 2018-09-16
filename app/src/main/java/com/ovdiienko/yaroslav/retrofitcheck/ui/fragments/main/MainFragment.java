@@ -68,12 +68,11 @@ public class MainFragment extends BaseFragment implements PreviewListener {
 
         // Probably is better to create separate class for Token and w/r it from Data Base.
         mUserToken = (String) PreferencesUtils.get(getActivity(), PreferencesKeys.OWN_USER_TOKEN, "");
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
     @Override
     protected View initItems(View view) {
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
         mRefreshLayout = view.findViewById(R.id.main_fragment_refresh);
         mProgressBar = view.findViewById(R.id.main_fragment_pb);
         mPhotosList = view.findViewById(R.id.main_fragment_rv_photos);
@@ -101,17 +100,20 @@ public class MainFragment extends BaseFragment implements PreviewListener {
     }
 
     private void observeImages(List<Photo> photos) {
-        applyVisibilityParameters(photos);
-
         mDataset.clear();
         mDataset.addAll(photos.subList(0, photos.size() - 1)); // too large data array (5k size). Took only half.
         mAdapter.updateData(mDataset);
+
+        applyVisibilityParameters(mDataset);
     }
 
     private void applyVisibilityParameters(List<Photo> photos) {
         if (photos != null && photos.size() > 0) {
             mPhotosList.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
+        } else {
+            mPhotosList.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -121,11 +123,13 @@ public class MainFragment extends BaseFragment implements PreviewListener {
             receiveData();
         }
 
+        applyVisibilityParameters(mDataset);
         mRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_main_fragment, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -183,4 +187,9 @@ public class MainFragment extends BaseFragment implements PreviewListener {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        mDataset.clear();
+        super.onDestroy();
+    }
 }
